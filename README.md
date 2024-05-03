@@ -1,0 +1,1 @@
+Hi Everybody, I am a student currently taking a course in Cyber Security. I have an avid interest to excel in Python and Javascirpt as well a good understanding of structural languages i.e. HTML and CSS.
