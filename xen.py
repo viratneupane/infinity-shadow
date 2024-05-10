@@ -12,7 +12,7 @@ j=0
 k=0
 l=0
 m=0 
-_num= input('enter the number in roman:')
+_num= input('enter the number in Uppercase Roman Numerals :')
 for x in _num:
    if x=="I":
     v=1
@@ -36,7 +36,7 @@ for x in _num:
     f=1000
     m+=1
    else:
-    print('invalid Roman Numeral')
+    print('Invalid data: Please enter all Roman numerals in Uppercase letters')
 _a=_num.find("I") 
 _b=_num.rfind("V")
 _c=_num.rfind('X')
