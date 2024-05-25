@@ -7,7 +7,7 @@ def cr():
     print(' This is the cryptography machine!')
     _a=input('\nenter the information that should be encrypted:')
     _b= _a.lower()
-    _c="abcdefghijklmnopqrstuvwxyz"
+    _c="abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
     z=[]
     _z=[]
     for i in _b:
