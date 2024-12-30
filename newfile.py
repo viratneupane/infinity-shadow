@@ -21,33 +21,56 @@ try:
  v=int(input("Would you like to 1.Login OR 2. Signup(Creating a New account)::"))
 except ValueError:
   print('\nPlease select the option (1) or (2)')
-
+for_=0
+cc=0
 if v==2:
  _a=input('Enter your username:')
  _b=input('Enter your password:')
- with open(r"E:\Login1\signup.txt","a") as sa:
+ with open(f"E:/Login1/{_a}.txt","w") as sa:
   sa.write(f'{_a}//')
   sa.write(f'{_b}\n')
- print('\n Now you can login to your account')
+ print('\n You have successfully created your account')
 
-j=True
-k=False
-while j:
-  _c= input('\n Please enter your username again:')
-  _d= input('\n Please enter your password again:')
-  with open(r'E:\Login2\signup1.txt','w') as sa1:
+elif v==1:
+ j=True
+ while j:
+  _c= input('\n Please enter your username:')
+  _d= input('\n Please enter your password:')
+  with open(f'E:/Login2/{_c}.txt',"a") as sa1:
     sa1.write(f'{_c}//')
     sa1.write(f'{_d}\n')
-  with open(r'E:\Login1\signup.txt','r') as sa:
-   if j:
-    for a in sa.readlines():
-       with open(r'E:\Login2\signup1.txt','r') as sa1:
-        b=sa1.read()
-       if a==b:
-        print('You have succesfully logged in!\n')
-        j=False
-        k=True
-   if not k:
-      print('\nplease enter the correct username and password')
-      j=True
-   
+  with open(f'E:/Login2/{_c}.txt',"r") as sa1:
+       b=sa1.readline()
+  with open(f'E:/Login1/{_c}.txt','r') as sa2:
+         a=sa2.read()
+  if b==a:
+            print('You have succesfully logged in!\n')    
+            from datetime import date
+            c=date.today()
+            if for_<=1:
+             with open(f'E:/Login2/{_c}.txt',"a") as sa1:
+              sa1.write(f'{c}')
+              for_=+1
+            with open(f'E:/Login2/{_c}.txt',"r") as sa1:
+             while cc<=len(sa1.readline())-2:
+               u=sa1.readline()
+               c=+1
+             if u==c:
+                cr=0
+             else:
+                for_=+1
+            j=False
+            print(f'\n You have logged in for{for_} times')           
+  else: 
+         print('\nplease enter the correct username and password')
+         j=True
+else:
+   print('\nPlease select the option (1) or (2)')
+
+
+
+# Use of w+,r+, and a+
+# 1. use of w+ is it is used to give permission for both read and write of the file.
+# 2. use of r+  is it is used to give permision for both read and write same as w+.
+# 3. Use of a+ is it is used to give permission for both append and read.
+
