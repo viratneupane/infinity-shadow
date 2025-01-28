@@ -1,5 +1,5 @@
 d={'class': {"A":34,"B":5,"C":5}  }
-print(d["class"]['A']
+print(d["class"]['A'])
 # https://www.cybrary.it/
 
 jumbled_list=[ ['oongoam','angom','mmanggo'],
