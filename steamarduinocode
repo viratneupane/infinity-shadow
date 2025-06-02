@@ -1,0 +1,101 @@
+const int RELAY1_PIN = 5;   // First relay control pin
+const int RELAY2_PIN = 2;   // Second relay control pin
+const int RELAY3_PIN = 3;   // Third relay control pin
+const int LED_PIN = 9;      // PWM pin for LED
+
+// Random flash variables
+unsigned long lastFlashTime = 0;
+int flashInterval = 10;     // Initial flash interval (ms)
+
+// Relay control variables
+bool relay1State = LOW;
+bool relay2State = LOW;
+bool relay3State = LOW;
+unsigned long prevRelayTime = 0;
+const unsigned long RELAY_ON_TIME = 4000;  // 4 seconds on
+const unsigned long RELAY_OFF_TIME = 4000; // 4 seconds off
+
+// Startup delay
+const unsigned long STARTUP_DELAY = 300000; // 5 minutes in milliseconds
+unsigned long powerOnTime = 0;
+bool systemActive = false;
+
+void setup() {
+  // Initialize all relay pins
+  pinMode(RELAY1_PIN, OUTPUT);
+  pinMode(RELAY2_PIN, OUTPUT);
+  pinMode(RELAY3_PIN, OUTPUT);
+  pinMode(LED_PIN, OUTPUT);
+  
+  // Initialize all outputs to OFF state
+  digitalWrite(RELAY1_PIN, HIGH);  // HIGH = relay OFF
+  digitalWrite(RELAY2_PIN, HIGH);  // HIGH = relay OFF
+  digitalWrite(RELAY3_PIN, HIGH);  // HIGH = relay OFF
+  digitalWrite(LED_PIN, HIGH);      // LED OFF
+  
+  Serial.begin(9600);
+  powerOnTime = millis();
+  Serial.println("System started. Waiting 5 minutes before activation...");
+}
+
+void loop() {
+  unsigned long currentTime = millis();
+  
+  // 5-minute delay check
+  if (!systemActive) {
+    if (currentTime - powerOnTime >= STARTUP_DELAY) {
+      systemActive = true;
+      prevRelayTime = currentTime;
+      lastFlashTime = currentTime;
+      Serial.println("5-minute delay complete. Starting normal operation.");
+    } else {
+      // Ensure everything stays OFF during delay period
+      digitalWrite(RELAY1_PIN, HIGH);
+      digitalWrite(RELAY2_PIN, HIGH);
+      digitalWrite(RELAY3_PIN, HIGH);
+      digitalWrite(LED_PIN, HIGH);
+      return;  // Skip the rest of the loop
+    }
+  }
+
+  // NORMAL OPERATION (after 5 minutes)
+  
+  // Relay control - all relays operate in sync (4 seconds ON/OFF cycle)
+  if (relay1State == HIGH) {
+    if (currentTime - prevRelayTime >= RELAY_ON_TIME) {
+      relay1State = relay2State = relay3State = LOW;
+      prevRelayTime = currentTime;
+      digitalWrite(RELAY1_PIN, HIGH);  // Turn relays OFF
+      digitalWrite(RELAY2_PIN, LOW);
+      digitalWrite(RELAY3_PIN, LOW);
+      Serial.println("All Relays OFF");
+    }
+  } else {
+    if (currentTime - prevRelayTime >= RELAY_OFF_TIME) {
+      relay1State = relay2State = relay3State = HIGH;
+      prevRelayTime = currentTime;
+      digitalWrite(RELAY1_PIN, LOW);   // Turn relays ON
+      digitalWrite(RELAY2_PIN, LOW);
+      digitalWrite(RELAY3_PIN, LOW);
+      Serial.println("All Relays ON");
+    }
+  }
+
+  // LED flashing (independent of relays)
+  if (currentTime - lastFlashTime >= flashInterval) {
+    lastFlashTime = currentTime;
+    flashInterval = random(10, 100);    // New random interval
+    
+    // Generate random flash
+    int flashDuration = random(10, 100); // 10-100ms
+    int brightness = random(50, 255);    // Random brightness
+    
+    analogWrite(LED_PIN, brightness);    // Flash ON
+    delay(flashDuration);
+    analogWrite(LED_PIN, LOW);          // Flash OFF
+    
+    Serial.print("LED flashed for ");
+    Serial.print(flashDuration);
+    Serial.println("ms");
+  }
+}
